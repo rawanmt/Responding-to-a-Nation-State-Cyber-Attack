@@ -1,0 +1,5 @@
+gedit /etc/apache2/apache2.conf
+
+Add these lines:
+	ServerSignature Off
+	ServerTokens Prod
