@@ -1,0 +1,32 @@
+1. Identify the rouge username added by the attackers:
+  - Username is: darklord
+  - IDS Log: 
+===================================================================================================================================
+Level: 8 - New user added to the system
+Rule Id: 5902
+Location: ubuntu-VirtualBox->/var/log/auth.log
+Sep 22 10:54:28 ubuntu-VirtualBox useradd[2971]: new user: name=darklord, UID=1001, GID=1001, home=/home/darklord, shell=/bin/bash
+===================================================================================================================================
+
+2. Locate the malicious process, and the remote port it is listening on: 
+
+  - Process is: /tmp/remotesec -k -l 56565
+  - The remote port is: 56565 which is known to be a backdoor/trojan port
+  
+  - IDS Log: 
+==========================================================================================================================================================================
+Level:7 - Listened ports status (netstat) changed (new port opened or closed).
+Rule Id: 533
+Location:ubuntu-VirtualBox->netstat -tan |grep LISTEN |egrep -v '(127.0.0.1| \\1)' | sort ossec: output: 'netstat -tan |grep LISTEN |egrep -v '(127.0.0.1| \\1)' | sort':
+tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN
+tcp 0 0 0.0.0.0:56565 0.0.0.0:* LISTEN
+tcp 0 0 127.0.1.1:53 0.0.0.0:* LISTEN
+tcp6 0 0 :::22 :::* LISTEN
+tcp6 0 0 :::80 :::* LISTEN
+Previous output:
+ossec: output: 'netstat -tan |grep LISTEN |egrep -v '(127.0.0.1| \\1)' | sort':
+tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN
+tcp 0 0 127.0.1.1:53 0.0.0.0:* LISTEN
+tcp6 0 0 :::22 :::* LISTEN
+tcp6 0 0 :::80 :::* LISTEN
+==========================================================================================================================================================================
